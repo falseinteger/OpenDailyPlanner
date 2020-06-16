@@ -1,0 +1,58 @@
+﻿@model OpenDailyPlanner.ViewModels.NoteEditViewModel
+@{
+    ViewData["Title"] = Model.Id == null ? "Создание новой записи" : "Изменение записи";
+}
+<div class="text-center">
+    @{
+        if (Model.InfoLabel != null)
+        {
+            await Html.RenderPartialAsync("../Shared/InfoLabel.cshtml", Model.InfoLabel);
+        }
+    }
+</div>
+@using (Html.BeginForm("Edit", "DalilyPlanner", FormMethod.Post))
+{
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="titleInput">Загаловок</label>
+                @Html.TextBoxFor(model => model.Title, new { placeholder = "Введите заголовок", @class = "form-control", @id = "titleInput" })
+                @Html.ValidationMessageFor(model => model.Title, string.Empty, new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="placeInput">Место</label>
+                @Html.TextBoxFor(model => model.Place, new { placeholder = "Введите место", @class = "form-control", @id = "placeInput" })
+                @Html.ValidationMessageFor(model => model.Place, string.Empty, new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label for="DateInput">Дата</label>
+                @Html.TextBoxFor(model => model.DateDisplay, new { @class = "form-control datepicker", @id = "DateInput" })
+                @Html.ValidationMessageFor(model => model.DateDisplay, string.Empty, new { @class = "text-danger" })
+                @Html.ValidationMessageFor(model => model.Date, string.Empty, new { @class = "text-danger" })
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label for="statusInput">Статус</label>
+                @Html.DropDownListFor(model => model.StatusSelect, Model.StatusList, "-- Выбрать важность --", new { @class = "form-control", @id = "statusInput" })
+                @Html.ValidationMessageFor(model => model.StatusSelect, string.Empty, new { @class = "text-danger" })
+            </div>
+        </div>
+    </div>
+    <div class="form-group">
+        <label for="bodyInput">Запись</label>
+        @Html.TextAreaFor(model => model.Body, new { placeholder = "Введите текст записи", @class = "form-control", @id = "bodyInput" })
+        @Html.ValidationMessageFor(model => model.Body, string.Empty, new { @class = "text-danger" })
+    </div>
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+    </div>
+}
+
+<script>$(document).ready(function () { $('.datepicker').mask('00.00.0000'); $('.datepicker').datepicker({ changeMonth: true, changeYear: true, dateFormat:'dd.mm.yy' }); });</script>

@@ -1,0 +1,15 @@
+﻿@model OpenDailyPlanner.ViewModels.InfoLabelViewModel
+@{
+    switch (Model.Type)
+    {
+        case InfoLabelType.Error:
+            <div class="alert alert-danger" role="alert">@Html.DisplayFor(model => model.Message)</div>
+            break;
+        case InfoLabelType.Warning:
+            <div class="alert alert-warning" role="alert">@Html.DisplayFor(model => model.Message)</div>
+            break;
+        default:
+            <div class="alert alert-primary" role="alert">@Html.DisplayFor(model => model.Message)</div>
+            break;
+    }
+}

@@ -1,0 +1,106 @@
+﻿@model OpenDailyPlanner.ViewModels.DalilyPlannerViewModel
+@{
+    ViewData["Title"] = "Главная страница";
+}
+    <div class="text-left">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Привет, @@@Html.DisplayFor(model => model.UserName)</h2>
+                </div>
+                <div class="col text-right">
+                    <b>Перейти в режим: </b>
+                    @Html.ActionLink(Model.IsEditMode ? "Просмотра" : "Правок", "Index", "DalilyPlanner", new { isEditMode = !Model.IsEditMode })
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            @{
+                if (Model.InfoLabel != null)
+                {
+                    await Html.RenderPartialAsync("../Shared/InfoLabel", Model.InfoLabel);
+                }
+            }
+        </div>
+        @{
+            var noteCount = Model.DailyPlanner.GetNoteCount();
+            if (noteCount <= 0)
+            {
+                <div class="text-center">
+                    Ваша дневник пустой, <br />
+                    @Html.ActionLink("Сделать демо базу", "CreateDemo", "DalilyPlanner", null, new { @class = "btn btn-success" })
+                    @Html.ActionLink("Сделать новую запись", "Edit", "DalilyPlanner", null, new { @class = "btn btn-primary" })
+                </div>
+            }
+            else
+            {
+                <table class="table table-striped table-hove">
+                    <thead class="thead-light">
+                        <tr>
+                            @{
+                                var display = OpenDailyPlanner.Models.NoteDaily.Display;
+                                var titelsCount = display.Length;
+                                if (Model.IsEditMode)
+                                {
+                                    // Добавляем 2 единицы чтоб добавить кнопки
+                                    titelsCount += 2;
+                                }
+                                for (int i = 0; i < titelsCount; i++)
+                                {
+                                    if (i >= display.Length)
+                                    {
+                                        <th scope="col" />
+                                        continue;
+                                    }
+                                    var textTitle = display[i].Title;
+                                    if(Model.DailyPlanner.SortField == display[i].Field)
+                                    {
+                                        var arrow = Model.DailyPlanner.IsReverse ? "↓" : "↑";
+                                        textTitle = $"{arrow} {textTitle}";
+                                    }
+                                    <th scope="col">
+                                        @Html.ActionLink(textTitle, "Index", "DalilyPlanner", new {
+                                           isEditMode = Model.IsEditMode,
+                                           sortField = display[i].Field,
+                                           isReverse = Model.DailyPlanner.SortField != display[i].Field ? true : !Model.DailyPlanner.IsReverse
+                                       })
+                                    </th>
+                                }
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (uint r = 0; r < noteCount; r++)
+                            {
+                                var note = Model.DailyPlanner.GetNoteDally(r);
+                                if (note == null)
+                                    continue;
+                                <tr>
+                                    @{
+                                        var values = note.Values;
+                                        for (int c = 0; c < values.Length; c++)
+                                        {
+                                            <td>@Html.DisplayFor(model => values[c])</td>
+                                        }
+                                        if (!Model.IsEditMode)
+                                        {
+                                            continue;
+                                        }
+                                        //Добавляем кноку редатировать
+                                        <td class="text-right">
+                                            @Html.ActionLink("Удалить", "Remove", "DalilyPlanner", new { id = r }, new { @class = "btn btn-danger btn-sm", @role = "button" })
+                                        </td>
+                                        //Добавляем кноку удаления
+                                        <td class="text-right">
+                                            @Html.ActionLink("Изменить", "Edit", "DalilyPlanner", new { id = r }, new { @class = "btn btn-primary btn-sm", @role = "button" })
+                                        </td>
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            }
+        }
+    </div>

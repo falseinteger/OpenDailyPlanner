@@ -1,0 +1,51 @@
+﻿@model OpenDailyPlanner.ViewModels.SettingViewModel
+@{
+    ViewData["Title"] = "Настройки";
+}
+
+    <div class="text-left">
+        <div class="container">
+            <div class="row">
+                <div class="col">
+                    <h2>Настроки ежедневника: @@@Html.DisplayFor(model => model.UserName)</h2>
+                </div>
+            </div>
+        </div>
+        <div class="text-center">
+            @{
+                if (Model.InfoLabel != null)
+                {
+                    await Html.RenderPartialAsync("../Shared/InfoLabel", Model.InfoLabel);
+                }
+            }
+        </div>
+        <ul class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-center">
+                Количество записей:
+                <span class="badge badge-primary badge-pill">@Html.DisplayFor(model => model.NoteCount)</span>
+            </li>
+        </ul>
+        <br />
+        <div class="text-left">
+            <h3>Эскортировать</h3>
+            @Html.ActionLink("Выгрузить архив", "DownloadFile", "DalilyPlanner", null, new { @class = "btn btn-warning", @role = "button" })
+        </div>
+        <br />
+        <div class="text-left">
+            <h3>Импортировать</h3>
+            @using (Html.BeginForm("UploadFile", "DalilyPlanner", FormMethod.Post, new { enctype = "multipart/form-data" }))
+            {
+                <div class="form-group">
+                    <div class="input-group mb-3">
+                        <div class="custom-file">
+                            @Html.TextBox("files", "", new { type = "file", @class = "custom-file-input", accept = ".odp", id = "fileGroup", name = "files" })
+                            <label class="custom-file-label" for="fileGroup" aria-describedby="inputGroupFileAddon">Выбрать ежедневник</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="text-left">
+                    <button type="submit" class="btn btn-primary">Загрузить архив</button>
+                </div>
+            }
+        </div>
+    </div>

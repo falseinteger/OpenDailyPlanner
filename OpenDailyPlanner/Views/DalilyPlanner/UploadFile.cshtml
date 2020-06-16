@@ -1,0 +1,72 @@
+﻿@model OpenDailyPlanner.ViewModels.UploadFileViewModel
+@{
+    ViewData["Title"] = "Загруженый архив";
+}
+
+
+<div class="text-left">
+    <div class="container">
+        <div class="row">
+            <div class="col">
+                <h2>Выбрете действие</h2>
+            </div>
+        </div>
+    </div>
+    <div class="text-left">
+        @{
+            if (Model.InfoLabel != null)
+            {
+                await Html.RenderPartialAsync("../Shared/InfoLabel", Model.InfoLabel);
+            }
+        }
+        <br/>
+        @using (Html.BeginForm())
+        {
+            @Html.HiddenFor(model => model.TempDailyPlannerName);
+
+            <div class="card">
+                <h5 class="card-header">Заменить ежедневник</h5>
+                <div class="card-body">
+                    <p class="card-text">Выбирая данный вариант вы удалить все записи безвозвратно! И добавите новые текущий ежедневник.</p>
+                    <button type="submit" class="btn btn-danger" formaction="SetNewDalily" formmethod="post">Применить</button>
+                </div>
+            </div>
+            <br />
+            <div class="card">
+                <h5 class="card-header">Добавить записи в ежедневник</h5>
+                <div class="card-body">
+                    <p class="card-text">Вы собираетесь добавить записи к текущему ежедневнику. Записи которые уже есть буду сохранены.</p>
+                    <button type="submit" class="btn btn-warning" formaction="AddNewDalily" formmethod="post">Применить</button>
+                </div>
+            </div>
+            <br />
+            <div class="card">
+                <h5 class="card-header">Выбрать диапозон записей по дате с добавить в ежедневник</h5>
+                <div class="card-body">
+                    <p class="card-text">Выберите диапозон с какой даты по какой дату (включительно) требуется добавить к текущему ежедневнику. Записи которые уже есть буду сохранены.</p>
+                    <div class="row">
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="DateInput">С какой даты</label>
+                                @Html.TextBoxFor(model => model.DateDisplayFrom, new { @class = "form-control datepicker", @id = "DateInput" })
+                                @Html.ValidationMessageFor(model => model.DateDisplayFrom, string.Empty, new { @class = "text-danger" })
+                                @Html.ValidationMessageFor(model => model.DateFrom, string.Empty, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                        <div class="col">
+                            <div class="form-group">
+                                <label for="statusInput">По какую дату (включительно)</label>
+                                @Html.TextBoxFor(model => model.DateDisplayTo, new { @class = "form-control datepicker", @id = "DateInput" })
+                                @Html.ValidationMessageFor(model => model.DateDisplayTo, string.Empty, new { @class = "text-danger" })
+                                @Html.ValidationMessageFor(model => model.DateTo, string.Empty, new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-warning" formaction="AddNewDalilyByDates" formmethod="post">Применить</button>
+                </div>
+            </div>
+        }
+    </div>  
+</div>
+
+<script>$(document).ready(function () { $('.datepicker').mask('00.00.0000'); $('.datepicker').datepicker({ changeMonth: true, changeYear: true, dateFormat:'dd.mm.yy' }); });</script>

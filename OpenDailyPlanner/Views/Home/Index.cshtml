@@ -1,0 +1,28 @@
+﻿@model OpenDailyPlanner.ViewModels.HomeViewModel
+@{
+    ViewData["Title"] = "Страница входа";
+}
+
+<div class="text-left">
+    <h1>Добро пожаловать, Open DalilyPlanner</h1>
+    <br />
+    <div class="text-center">
+        @using (Html.BeginForm("Login", "Home", FormMethod.Post))
+        {
+            <div class="form-row">
+                <div class="col-auto">
+                    <div class="input-group mb-2">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">@@</div>
+                        </div>
+                        @Html.TextBoxFor(model => model.UserName, new { placeholder = "Введите ваш логин", @class = "form-control", id = "inlineFormInputGroup" })
+                    </div>
+                    @Html.ValidationMessageFor(model => model.UserName, string.Empty, new { @class = "text-danger" })
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">Войти</button>
+                </div>
+            </div>
+        }
+    </div>
+</div>  
